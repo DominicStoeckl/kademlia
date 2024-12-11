@@ -22,3 +22,7 @@ class Kademlia:
 
     def show_node_view(self):
         self.routing_thread_in_queue.put(f"show_node_view")
+
+    def store(self):
+        self.routing_thread_in_queue.put(f"store")
+        

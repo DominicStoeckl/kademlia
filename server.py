@@ -5,6 +5,7 @@ from threading import Thread
 from queue import Queue
 import logging
 import sys
+import hashlib
 
 from routing import routing_thread_handler
 from node import node_view_thread_handler
@@ -15,6 +16,12 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 REFRESH_INTERVAL = 50
+
+def generate_bid(ip, port):
+    combined = f"{ip}:{port}"
+    hash_object = hashlib.sha256(combined.encode())
+    hash_hex = hash_object.hexdigest()
+    return hash_hex
 
 
 @click.command()
@@ -34,6 +41,7 @@ def runner(k, bid, depth, ip, port, bootstrap_bid, bootstrap_ip, bootstrap_port)
 
     bootstrap_config = None
     if bootstrap_bid and bootstrap_ip and bootstrap_port:
+        bootstrap_bid = generate_bid(bootstrap_ip, bootstrap_port)
         bootstrap_config = {
             "bid": bootstrap_bid,
             "ip": bootstrap_ip,

@@ -143,6 +143,7 @@ class RoutingTable:
     def refresh(routing_thread_in_queue, refresh_queue, refresh_interval_s):
         while True:
             routing_thread_in_queue.put(f"refresh_get_config")
+            routing_thread_in_queue.put(f"show_node_view")
             table_config = refresh_queue.get(True, timeout=10)
             routing_table = RoutingTable.rebuild_from_str(table_config)
             removables = RoutingTable.cleanup(routing_table)
@@ -229,6 +230,7 @@ def routing_thread_handler(
                 routing_table.remove(*args)
             elif command == "refresh_get_config":
                 refresh_queue.put(str(routing_table))
+                node_view_thread_in_queue.put(f"show")
             elif command == "find_node":
                 nearest_node = routing_table.find_nearest_node(args[0])
                 logger.info(f"Nearest node to {args[0]} is {nearest_node}")
@@ -237,6 +239,8 @@ def routing_thread_handler(
                 logger.info(routing_table)
             elif command == "show_node_view":
                 node_view_thread_in_queue.put(f"show")
+            elif command == "store":
+                #some stuff
             else:
                 logger.info(f"Unknown command {command}")
         except QueueEmpty:

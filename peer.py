@@ -50,4 +50,12 @@ class Peer:
         except zerorpc.exceptions.TimeoutExpired:
             return False
 
-
+    def store(self):
+        try:
+            client = zerorpc.Client(f"tcp://{self.ip}:{self.port}", timeout=2, heartbeat=None)
+            logger.info(f"Store {str(self)}")
+            client.close()
+            self.last_seen = datetime.utcnow()
+            return True
+        except zerorpc.exceptions.TimeoutExpired:
+            return False

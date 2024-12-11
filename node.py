@@ -80,7 +80,7 @@ def node_view_thread_handler(depth, in_queue, timeout=5):
                 logger.info(f"NodeView Adding {args}")
                 universe.add(Node(*args))
             elif command == "show":
-                logger.info(universe)
+                logger.info(str(universe))
             elif command == "remove":
                 logger.info(f"NodeView Removing {args}")
                 universe.remove(*args)
@@ -91,8 +91,9 @@ def node_view_thread_handler(depth, in_queue, timeout=5):
 
 
 if __name__ == "__main__":
-    universe = Universe(4)
-    universe.add(Node(0))
+    universe = Universe(8)
+    universe.add(Node(1))
     universe.add(Node(15))
-    universe.remove("0000")
+    universe.add(Node(21))
+    #universe.remove("0000")
     print(universe)
